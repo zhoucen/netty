@@ -224,6 +224,7 @@ public class SslHandlerTest {
         }
     }
 
+    @SuppressWarnings("deprecation")
     private static ChannelHandler newHandler(final SslContext sslCtx, final Promise<Void> promise) {
         return new ChannelInitializer() {
             @Override

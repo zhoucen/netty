@@ -230,6 +230,7 @@ public class SocketSslEchoTest extends AbstractSocketTest {
         TestUtils.compressHeapDumps();
     }
 
+    @SuppressWarnings("deprecation")
     public void testSslEcho(ServerBootstrap sb, Bootstrap cb) throws Throwable {
         final ExecutorService delegatedTaskExecutor = Executors.newCachedThreadPool();
         reset();
@@ -516,6 +517,7 @@ public class SocketSslEchoTest extends AbstractSocketTest {
             renegoFuture = null;
         }
 
+        @SuppressWarnings("deprecation")
         @Override
         public void channelRead0(ChannelHandlerContext ctx, ByteBuf in) throws Exception {
             byte[] actual = new byte[in.readableBytes()];

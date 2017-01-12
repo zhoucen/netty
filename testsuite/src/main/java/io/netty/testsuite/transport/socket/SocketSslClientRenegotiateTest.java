@@ -127,6 +127,7 @@ public class SocketSslClientRenegotiateTest extends AbstractSocketTest {
         run();
     }
 
+    @SuppressWarnings("deprecation")
     public void testSslRenegotiationRejected(ServerBootstrap sb, Bootstrap cb) throws Throwable {
         reset();
 

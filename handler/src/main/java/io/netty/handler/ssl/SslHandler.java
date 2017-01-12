@@ -412,7 +412,9 @@ public class SslHandler extends ByteToMessageDecoder implements ChannelOutboundH
      *
      * @return the {@link Future} for the iniital TLS handshake if {@link #renegotiate()} was not invoked.
      *         The {@link Future} for the most recent {@linkplain #renegotiate() TLS renegotiation} otherwise.
+     * @deprecated intercept {@link SslHandshakeCompletionEvent}.
      */
+    @Deprecated
     public Future<Channel> handshakeFuture() {
         return handshakePromise;
     }
@@ -420,14 +422,20 @@ public class SslHandler extends ByteToMessageDecoder implements ChannelOutboundH
     /**
      * Sends an SSL {@code close_notify} message to the specified channel and
      * destroys the underlying {@link SSLEngine}.
+     *
+     * @deprecated use {@link Channel#close()} or {@link ChannelHandlerContext#close()}
      */
+    @Deprecated
     public ChannelFuture close() {
         return close(ctx.newPromise());
     }
 
     /**
      * See {@link #close()}
+     *
+     * @deprecated use {@link Channel#close(ChannelPromise)} or {@link ChannelHandlerContext#close(ChannelPromise)}
      */
+    @Deprecated
     public ChannelFuture close(final ChannelPromise promise) {
         final ChannelHandlerContext ctx = this.ctx;
         ctx.executor().execute(new Runnable() {
@@ -454,7 +462,9 @@ public class SslHandler extends ByteToMessageDecoder implements ChannelOutboundH
      * This method will return the same {@link Future} all the time.
      *
      * @see SSLEngine
+     * @deprecated intercept {@link SslCloseCompletionEvent}.
      */
+    @Deprecated
     public Future<Channel> sslCloseFuture() {
         return sslClosePromise;
     }

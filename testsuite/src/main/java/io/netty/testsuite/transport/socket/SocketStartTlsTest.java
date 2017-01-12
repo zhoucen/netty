@@ -245,6 +245,7 @@ public class SocketStartTlsTest extends AbstractSocketTest {
             ctx.writeAndFlush("StartTlsRequest\n");
         }
 
+        @SuppressWarnings("deprecation")
         @Override
         public void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
             if ("StartTlsResponse".equals(msg)) {
