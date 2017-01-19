@@ -614,7 +614,23 @@ public class ReferenceCountedOpenSslEngine extends SSLEngine implements Referenc
                 }
             }
 
-            if (dst.remaining() < MAX_ENCRYPTED_PACKET_LENGTH) {
+            int endOffset = offset + length;
+            long maxEncryptedLen = 0;
+
+            for (int i = offset; i < endOffset; ++i) {
+                final ByteBuffer src = srcs[i];
+                if (src == null) {
+                    throw new IllegalArgumentException("srcs[" + i + "] is null");
+                }
+                maxEncryptedLen = src.remaining();
+            }
+
+            maxEncryptedLen += MAX_ENCRYPTION_OVERHEAD_LENGTH;
+            // If overflow happened just use MAX_PLAINTEXT_LENGTH.
+            if (maxEncryptedLen < 0 || MAX_ENCRYPTED_PACKET_LENGTH < maxEncryptedLen) {
+                maxEncryptedLen = MAX_ENCRYPTED_PACKET_LENGTH;
+            }
+            if (dst.remaining() < maxEncryptedLen) {
                 // Can not hold the maximum packet so we need to tell the caller to use a bigger destination
                 // buffer.
                 return new SSLEngineResult(BUFFER_OVERFLOW, getHandshakeStatus(), 0, 0);
@@ -622,13 +638,9 @@ public class ReferenceCountedOpenSslEngine extends SSLEngine implements Referenc
             // There was no pending data in the network BIO -- encrypt any application data
             int bytesProduced = 0;
             int bytesConsumed = 0;
-            int endOffset = offset + length;
 
             loop: for (int i = offset; i < endOffset; ++i) {
                 final ByteBuffer src = srcs[i];
-                if (src == null) {
-                    throw new IllegalArgumentException("srcs[" + i + "] is null");
-                }
                 while (src.hasRemaining()) {
                     final SSLEngineResult pendingNetResult;
                     // Write plaintext application data to the SSL engine
